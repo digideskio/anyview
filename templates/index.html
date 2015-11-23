@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <title>Any View</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="/static/js/libs/jquery-1.11.3.min.js"></script>
+    <script src="/static/js/libs/angular.min.js"></script>
+    <script src="/static/js/libs/angular-route.min.js"></script>
+    <script src="/static/js/libs/angular-resource.min.js"></script>
+    <script src="/static/js/libs/lodash.min.js"></script>
+    <script src="/static/js/libs/restangular.min.js"></script>
+    <script src="/static/js/libs/highcharts.js"></script>
+    <script src="/static/js/libs/highcharts-3d.js"></script>
+    <script src="/static/js/libs/highcharts-more.js"></script>
+    <script src="/static/js/libs/themes/sand-signika.js"></script>
+    <script src="/static/js/libs/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/css/libs/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/libs/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/socwatch.css">
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/controllers/socwatch.js"></script>
+    <script src="/static/js/controllers/noc.js"></script>
+    <script src="/static/js/directives/pie2d.js"></script>
+    <script src="/static/js/directives/pie3d.js"></script>
+    <script src="/static/js/directives/column2d.js"></script>
+    <script src="/static/js/directives/column3d.js"></script>
+    <script src="/static/js/directives/line.js"></script>
+  </head>
+
+  <body ng-app="SRApp">
+
+    <!-- Begin top navi bar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top first-navbar" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand">AnyView</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" role="button">DataSource <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="#!/socwatch">SoC Watch</a></li>
+              <li><a href="#!/noc">NoC Utilization</a></li>
+              <li><a href="#!/perf">Linux Perf</a></li>
+              <li role="separator" class="divider"></li>
+              <li><a>TBD</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <!-- End of top navi bar -->
+
+    <div class="container-fluid main">
+      <div ng-view></div>
+    </div>
+
+  </body>
+</html>

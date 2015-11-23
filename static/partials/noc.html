@@ -1,0 +1,64 @@
+<nav class="navbar navbar-default navbar-fixed-top" style="top: 50px;">
+  <div class="container-fluid">
+
+    <div class="row">
+      <div class="collapse navbar-collapse">
+
+        <div class="col-xs-6 col-sm-9">
+          <form class="navbar-form navbar-left">
+            <div class="input-group">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="button">Base</button>
+              </span>
+              <select class="form-control" ng-model="base_sel" ng-change="baseChanged()">
+                <option ng-repeat="item in nocDataSet | filter: input_filter">{{item}}</option>
+              </select>
+            </div>
+          </form>
+
+          <form class="navbar-form navbar-left">
+            <div class="input-group">
+              <span class="input-group-btn">
+                <button class="btn btn-success" type="button">Treat</button>
+              </span>
+              <select class="form-control" ng-model="treat_sel" ng-change="treatChanged()">
+                <option ng-repeat="item in nocDataSet | filter: input_filter">{{item}}</option>
+              </select>
+            </div>
+          </form>
+
+          <form class="navbar-form navbar-left">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Filter..." ng-model="input_filter">
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div><!-- /.container-fluid -->
+</nav>
+
+<h3 class="sub-header">NoC Utilization</h3>
+<h4 class="title" ng-show="base_sel!==undefined"><em>{{base_sel}}</em><samp class="h4" ng-show="base_sel!==undefined && treat_sel!==undefined"> <small>vs</small></samp> <em class="h4" ng-show="treat_sel!==undefined">{{treat_sel}}</em></h4>
+
+<div class="row">
+  <form class="form-inline">
+    <div class="form-group">
+      <label class="col-sm-1 control-label">Port</label>
+      <div class="col-sm-12">
+        <label class="checkbox-inline" ng-repeat="v in consumers">
+          <input type="checkbox" ng-model="v.checked"  ng-change="prepareData()"> {{v.name}}
+        </label>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="row">
+  <div class="col-sm-10" ng-repeat="v in drawSeries">
+    <div class="line" line data="{{v}}" unit="KB/s"></div>
+  </div>
+</div>
+
+</div>

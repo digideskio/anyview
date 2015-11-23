@@ -55,3 +55,7 @@ docs/_build/
 
 # PyBuilder
 target/
+static/css/libs/
+static/css/fonts/
+static/js/libs/
+data/

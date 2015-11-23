@@ -1,0 +1,195 @@
+<nav class="navbar navbar-default navbar-fixed-top" style="top: 50px;">
+  <div class="container-fluid">
+
+    <div class="row">
+      <div class="collapse navbar-collapse">
+        <div class="col-sm-2">
+          <div class="row">
+            <form class="navbar-form navbar-left">
+              <div class="col-xs-6 col-sm-12">
+                <label class="checkbox-inline">
+                  <input type="checkbox" ng-model="c0summary" ng-click="broadcast()"> C0 Summary
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" ng-model="pstate" ng-click="broadcast()"> P-State
+                </label>
+              </div>
+              <div class="col-xs-6 col-sm-12">
+                <label class="checkbox-inline">
+                  <input type="checkbox" ng-model="cstate" ng-click="broadcast()"> C-State
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" ng-model="irqs" ng-click="broadcast()"> Top 10 IRQs
+                </label>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-xs-6 col-sm-9">
+          <form class="navbar-form navbar-left">
+            <div class="input-group">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="button">Base</button>
+              </span>
+              <select class="form-control" ng-model="base_sel" ng-change="baseChanged()">
+                <option ng-repeat="item in socWatchDataSet | filter: input_filter">{{item}}</option>
+              </select>
+            </div>
+          </form>
+
+          <form class="navbar-form navbar-left">
+            <div class="input-group">
+              <span class="input-group-btn">
+                <button class="btn btn-success" type="button">Treat</button>
+              </span>
+              <select class="form-control" ng-model="treat_sel" ng-change="treatChanged()">
+                <option ng-repeat="item in socWatchDataSet | filter: input_filter">{{item}}</option>
+              </select>
+            </div>
+          </form>
+
+          <form class="navbar-form navbar-left">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Filter..." ng-model="input_filter">
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div><!-- /.container-fluid -->
+</nav>
+
+<h3 class="sub-header">SoC Watch Report</h3>
+<h4 class="title" ng-show="base_sel!==undefined"><em>{{base_sel}}</em><samp class="h4" ng-show="base_sel!==undefined && treat_sel!==undefined"> <small>vs</small></samp> <em class="h4" ng-show="treat_sel!==undefined">{{treat_sel}}</em></h4>
+
+<div ng-show="c0summary">
+  <h4 class="sub-header">Core C0 Residency
+    <form class="form-inline"><label class="checkbox-inline sub-checkbox"><input type="checkbox" ng-model="c0power" ng-click="broadcast()"><small>Power view</small></label></form>
+  </h4>
+  <p>Pie chart shows 4 cores C0 residencies(normalized).</p>
+  <p>Bar chart compares core's residency within different build/scenario.</p>
+  <p>Check <mark>"Power view"</mark> to see core's estimate power consumption comparison</p>
+  <div class="row">
+    <div class="col-xs-3 col-sm-3" ng-repeat="v in baseC0Dist">
+      <div class="pie3d" pie3d haslabel="true" showlegend="true" seriestag="Percent"
+           data="{{v}}" title="{{base_sel}}"></div>
+    </div>
+    <div class="col-xs-3 col-sm-3" ng-repeat="v in treatC0Dist">
+      <div class="pie3d" pie3d haslabel="true" showlegend="true" seriestag="Percent"
+           data="{{v}}" title="{{treat_sel}}"></div>
+    </div>
+    <div class="col-xs-3 col-sm-6" ng-repeat="v in c0DistCompare">
+      <div class="column3d" column3d data="{{v}}" ytitle="C0 Residency" title="{{base_sel + ' vs. ' + treat_sel}}"></div>
+    </div>
+  </div>
+
+  <div ng-show="c0power">
+    <h4 class="sub-header">Core Power View</h4>
+    <p> Each core's power is calculated by <em>Frequency * Residency</em>
+      <div class="row">
+        <div class="col-xs-3 col-sm-3" ng-repeat="v in baseC0Power">
+          <div class="pie3d" pie3d haslabel="true" showlegend="true" seriestag="Percent"
+               data="{{v}}" title="{{base_sel}}"></div>
+        </div>
+        <div class="col-xs-3 col-sm-3" ng-repeat="v in treatC0Power">
+          <div class="pie3d" pie3d haslabel="true" showlegend="true" seriestag="Percent"
+               data="{{v}}" title="{{treat_sel}}"></div>
+        </div>
+        <div class="col-xs-3 col-sm-6" ng-repeat="v in c0PowerCompare">
+          <div class="column3d" column3d data="{{v}}" ytitle="C0 Power Index" title="{{base_sel + ' vs. ' + treat_sel}}"></div>
+        </div>
+      </div>
+  </div>
+</div>
+
+<div ng-show="pstate">
+  <h4 class="">P-State Summary
+    <form class="form-inline"><label class="checkbox-inline sub-checkbox"><input type="checkbox" ng-model="pstatepower" ng-click="broadcast()"><small>Power view</small></label></form>
+  </h4>
+  <p>Detailed P-State Freq-Residency of each core(normalized). For raw data, check the <mark>bar</mark> chart.</p>
+  <p>Check <mark>"Power view"</mark> to see each core's weighted frequncy distribution</p>
+  <h4 class="sub-header"><small>{{base_sel}}</small></h4>
+  <div class="row">
+    <div class="col-xs-3 col-sm-3" ng-repeat="v in basePStateResidencies">
+      <div class="pie2d" pie2d haslabel="true" distance="20" showlegend="false" seriestag="Residency (normalized)"
+           data="{{ {'tags': basePStateStates, 'values': v} }}" title="{{'Core '+$index}}"></div>
+    </div>
+  </div>
+  <h4 class="sub-header"><small>{{treat_sel}}</small></h4>
+  <div class="row">
+    <div class="col-xs-3 col-sm-3" ng-repeat="v in treatPStateResidencies">
+      <div class="pie2d" pie2d haslabel="true" distance="20" showlegend="false" seriestag="Residency (normalized)"
+           data="{{ {'tags': treatPStateStates, 'values': v} }}" title="{{'Core '+$index}}"></div>
+    </div>
+  </div>
+
+
+  <h4 class="sub-header"><small>{{base_sel + ' vs. ' + treat_sel}}</small></h4>
+  <div class="row">
+    <div class="col-xs-3 col-sm-8" ng-repeat="v in pStateCompare">
+      <div class="column2d" column2d data="{{v}}" stacking="normal" unit="%" ytitle="Residency" title=""></div>
+    </div>
+  </div>
+
+  <div ng-show="pstatepower">
+    <h4 class="">Core P-State Power Distribution</h4>
+    <p>Showing each core's frequency distribution (normalized).</p>
+    <h4 class="sub-header"><small>{{base_sel}}</small></h4>
+    <div class="row">
+      <div class="col-xs-3 col-sm-3" ng-repeat="v in basePStateValuesWeight">
+        <div class="pie2d" pie2d haslabel="true" distance="20" showlegend="false" seriestag="Freq. Power"
+             data="{{ {'tags': basePStateStates, 'values': v} }}" title="{{'Core '+$index}}"></div>
+      </div>
+    </div>
+    <h4 class="sub-header"><small>{{treat_sel}}</small></h4>
+    <div class="row">
+      <div class="col-xs-3 col-sm-3" ng-repeat="v in treatPStateValuesWeight">
+        <div class="pie2d" pie2d haslabel="true" distance="20" showlegend="false" seriestag="Freq. Power"
+             data="{{ {'tags': treatPStateStates, 'values': v} }}" title="{{'Core '+$index}}"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div ng-show="cstate">
+  <h4 class="sub-header">C-State Residencies</h4>
+  <p>Discrete view of each core's C-State residencies.</p>
+  <p>Note that <u><mark>C6FS(full shrink)</mark></u> and <u><mark>C6NS(no shrink)</mark></u> are marked with different colors</p>
+  <h4 class="sub-header"><small>{{base_sel}}</small></h4>
+  <div class="row">
+    <div class="col-xs-3 col-sm-3" ng-repeat="v in baseData.cstate.residencies">
+      <div class="pie2d" pie2d haslabel="true" showlegend="false" sliced="0" seriestag="Res"
+           data="{{ {'tags': baseData.cstate.states, 'values': v} }}" title="{{'Core '+$index}}"></div>
+    </div>
+  </div>
+  <h4 class="sub-header"><small>{{treat_sel}}</small></h4>
+  <div class="row">
+    <div class="col-xs-3 col-sm-3" ng-repeat="v in treatData.cstate.residencies">
+      <div class="pie2d" pie2d haslabel="true" showlegend="false" sliced="0" seriestag="Res"
+           data="{{ {'tags': treatData.cstate.states, 'values': v} }}" title="{{'Core '+$index}}"></div>
+    </div>
+  </div>
+</div>
+
+<div ng-show="irqs">
+  <h4 class="sub-header">Top 10 IRQs Waking VMM</h4>
+  <p>Note that same IRQs share the same color in the pie chart.</p>
+  <div class="row">
+    <div class="col-xs-3 col-sm-6" ng-repeat="v in baseIrqs">
+      <div class="pie3d" pie3d haslabel="true" distance="30" showlegend="false" seriestag="Count (normalized)"
+           data="{{v}}" title="{{base_sel}}"></div>
+    </div>
+    <div class="col-xs-3 col-sm-6" ng-repeat="v in treatIrqs">
+      <div class="pie3d" pie3d haslabel="true" distance="30" showlegend="false" seriestag="Count (normalized)"
+           data="{{v}}" title="{{treat_sel}}"></div>
+    </div>
+  </div>
+  <h4 class="sub-header"><small>{{base_sel + ' vs. ' + treat_sel}}</small></h4>
+  <div class="row">
+    <div class="col-xs-3 col-sm-10" ng-repeat="v in irqsCompare">
+      <div class="column2d" column2d data="{{v}}" unit="" ytitle="Wakeup Count" title=""></div>
+    </div>
+  </div>
+</div>

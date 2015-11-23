@@ -1,0 +1,69 @@
+body {
+    padding-top: 100px;
+}
+
+.sub-header {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+h4 {
+    padding-top: 10px;
+}
+
+h5 {
+    padding-top: 10px;
+}
+
+
+.navbar-fixed-top {
+    border: 0;
+}
+
+.main {
+    padding: 10px;
+}
+
+.title {
+    padding-bottom: 50px;
+}
+
+.first-navbar {
+    z-index: 9999;
+}
+
+@media (min-width: 768px) {
+    .main {
+        padding-right: 30px;
+        padding-left: 30px;
+    }
+}
+
+.main .sub-header {
+    margin-top: 20;
+}
+
+.pie2d {
+     width: auto;
+     height: 250px;
+}
+
+.pie3d {
+     width: auto;
+     height: 350px;
+}
+
+.column3d {
+     width: auto;
+     height: 350px;
+}
+
+.column2d {
+     width: auto;
+     height: 450px;
+}
+
+.line {
+     width: auto;
+     height: 450px;
+}
